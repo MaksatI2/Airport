@@ -2,18 +2,19 @@ package airport.service.impl;
 
 import airport.dto.CreateFlightDTO;
 import airport.dto.FlightDTO;
-import airport.model.Booking;
-import airport.model.ClassTypeAirplane;
-import airport.model.Flight;
+import airport.model.*;
 import airport.repository.BookingRepository;
 import airport.repository.ClassTypeAirplaneRepository;
 import airport.repository.FlightRepository;
 import airport.service.AirplaneService;
 import airport.service.DestinationService;
 import airport.service.FlightService;
+import airport.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class FlightServiceImpl implements FlightService {
 
     private final FlightRepository flightRepository;
+    private final UserService userService;
     private final BookingRepository bookingRepository;
     private final ClassTypeAirplaneRepository classTypeAirplaneRepository;
     private final DestinationService destinationService;
@@ -60,7 +62,10 @@ public class FlightServiceImpl implements FlightService {
         flight.setPrice(economyPrice);
         flight.setBusinessPrice(businessPrice);
         flight.setAirplane(airplaneService.getAirplaneById(flightDTO.getAirplaneId()));
-        flight.setUser(flight.getUser());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.findUserByEmail(currentUsername);
+        flight.setUser(currentUser);
 
         Flight savedFlight = flightRepository.save(flight);
 
@@ -161,11 +166,24 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<FlightDTO> getFlightsByAirlineId(Long airlineId) {
-        return flightRepository.findFlightsByAirlineId(airlineId)
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<FlightDTO> getFlightsByAirlineId(Long airlineId, Pageable pageable) {
+        return flightRepository.findFlightsByAirlineId(airlineId, pageable)
+                .map(this::convertToDto);
+    }
+    @Override
+    public int getTotalSeatsByFlightId(Long flightId) {
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new RuntimeException("Рейс не найден"));
+
+        Airplane airplane = flight.getAirplane();
+        if (airplane == null) {
+            return 0;
+        }
+
+        int economySeats = airplane.getCapacity() != null ? airplane.getCapacity() : 0;
+        int businessSeats = airplane.getBusiness_capacity() != null ? airplane.getBusiness_capacity() : 0;
+
+        return economySeats + businessSeats;
     }
 
 }

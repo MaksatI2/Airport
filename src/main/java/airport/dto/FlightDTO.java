@@ -14,6 +14,7 @@ public class FlightDTO {
     private String flightNumber;
 
     private String departureAirport;
+
     private String destination;
 
     @NotNull(message = "Выберите аэропорт отправления")

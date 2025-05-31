@@ -5,12 +5,18 @@ import airport.exception.InvalidRegisterException;
 import airport.exception.InvalidUserDataException;
 import airport.exception.UserNotFoundException;
 import airport.model.AccountType;
+import airport.model.Booking;
+import airport.model.Flight;
 import airport.model.User;
+import airport.repository.BookingRepository;
+import airport.repository.FlightRepository;
 import airport.repository.UserRepository;
 import airport.service.UserService;
 import airport.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static airport.util.FileUtil.DEFAULT_AVATAR;
 
@@ -31,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FlightRepository flightRepository;
+    private final BookingRepository bookingRepository;
 
     public void registerUser(UserDTO dto) {
         log.info("Попытка регистрации нового пользователя с email: {}", dto.getEmail());
@@ -120,23 +127,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsersByAccountType(AccountType accountType) {
-        log.info("Получение всех пользователей с типом аккаунта: {}", accountType);
-
-        List<User> users = userRepository.findByAccountType(accountType);
-
-        return users.stream()
-                .map(user -> {
-                    UserDTO dto = new UserDTO();
-                    dto.setId(user.getId());
-                    dto.setUsername(user.getUsername());
-                    dto.setEmail(user.getEmail());
-                    dto.setEnabled(user.getEnabled());
-                    dto.setAccountType(user.getAccountType());
-                    return dto;
-                })
-                .collect(Collectors.toList());
+    public Page<UserDTO> getAllUsersByAccountType(AccountType accountType, Pageable pageable) {
+        Page<User> usersPage = userRepository.findByAccountType(accountType, pageable);
+        return usersPage.map(this::convertToDto);
     }
+
+    private UserDTO convertToDto(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .enabled(user.getEnabled())
+                .accountType(user.getAccountType())
+                .build();
+    }
+
 
     @Transactional
     @Override
@@ -148,6 +154,17 @@ public class UserServiceImpl implements UserService {
                     log.error("Пользователь с ID {} не найден", userId);
                     return new UserNotFoundException("Пользователь с ID не найден: " + userId);
                 });
+
+        if (!user.getEnabled()) {
+            Page<Flight> airlineFlights = flightRepository.findFlightsByAirlineId(userId, Pageable.unpaged());
+            for (Flight flight : airlineFlights) {
+                List<Booking> bookings = bookingRepository.findByFlightId(flight.getId());
+                if (!bookings.isEmpty()) {
+                    log.error("Нельзя заблокировать авиакомпанию с ID {}, так как у нее есть активные брони", userId);
+                    throw new IllegalStateException("Нельзя заблокировать авиакомпанию, так как у нее есть активные брони");
+                }
+            }
+        }
 
         user.setEnabled(!user.getEnabled());
         userRepository.save(user);

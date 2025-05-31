@@ -15,7 +15,7 @@ import java.util.List;
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("SELECT f FROM Flight f WHERE f.user.id = :airlineId")
-    List<Flight> findFlightsByAirlineId(@Param("airlineId") Long airlineId);
+    Page<Flight> findFlightsByAirlineId(@Param("airlineId") Long airlineId, Pageable pageable);
 
     @Query("SELECT f FROM Flight f WHERE f.user.enabled = true")
     Page<Flight> findAll(Pageable pageable);
@@ -25,14 +25,15 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Flight f WHERE f.flightNumber = :flightNumber")
     boolean existsByFlightNumber(@Param("flightNumber") String flightNumber);
-    @Query("SELECT f FROM Flight f WHERE f.placeDeparture.id = :departureId AND f.destination.id = :destinationId AND FORMATDATETIME(f.departureTime, 'yyyy-MM-dd') = FORMATDATETIME(:date, 'yyyy-MM-dd')")
+
+    @Query("SELECT f FROM Flight f WHERE f.placeDeparture.id = :departureId AND f.destination.id = :destinationId AND FORMATDATETIME(f.departureTime, 'yyyy-MM-dd') = FORMATDATETIME(:date, 'yyyy-MM-dd') AND f.arrivalTime >= CURRENT_TIMESTAMP")
     Page<Flight> findByPlaceDepartureIdAndDestinationIdAndDepartureDate(
             @Param("departureId") Long departureId,
             @Param("destinationId") Long destinationId,
             @Param("date") LocalDate date,
             Pageable pageable);
 
-    @Query("SELECT f FROM Flight f WHERE f.placeDeparture.id = :departureId AND f.destination.id = :destinationId AND FORMATDATETIME(f.departureTime, 'yyyy-MM-dd') BETWEEN FORMATDATETIME(:startDate, 'yyyy-MM-dd') AND FORMATDATETIME(:endDate, 'yyyy-MM-dd')")
+    @Query("SELECT f FROM Flight f WHERE f.placeDeparture.id = :departureId AND f.destination.id = :destinationId AND FORMATDATETIME(f.departureTime, 'yyyy-MM-dd') BETWEEN FORMATDATETIME(:startDate, 'yyyy-MM-dd') AND FORMATDATETIME(:endDate, 'yyyy-MM-dd') AND f.arrivalTime >= CURRENT_TIMESTAMP")
     Page<Flight> findByPlaceDepartureIdAndDestinationIdAndDateRange(
             @Param("departureId") Long departureId,
             @Param("destinationId") Long destinationId,
@@ -40,5 +41,9 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
 
-    Page<Flight> findByPlaceDepartureIdAndDestinationId(Long departureId, Long destinationId, Pageable pageable);
+    @Query("SELECT f FROM Flight f WHERE f.placeDeparture.id = :departureId AND f.destination.id = :destinationId AND f.arrivalTime >= CURRENT_TIMESTAMP")
+    Page<Flight> findByPlaceDepartureIdAndDestinationId(
+            @Param("departureId") Long departureId,
+            @Param("destinationId") Long destinationId,
+            Pageable pageable);
 }

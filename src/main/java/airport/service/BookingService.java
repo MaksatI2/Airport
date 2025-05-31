@@ -13,4 +13,6 @@ public interface BookingService {
     List<BookingDTO> getUserBookings(String email);
     void cancelBooking(Long bookingId, User user);
     BookingDTO getBookingById(Long bookingId, User user);
+
+    int getBookedSeatsByFlightId(Long flightId);
 }
