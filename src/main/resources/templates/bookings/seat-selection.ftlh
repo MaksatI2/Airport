@@ -190,7 +190,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-4">
-                                <h6><i class="fas fa-key me-2"></i>Легенда мест:</h6>
+                                <h6><i class="fas fa-key me-2"></i>Статус мест:</h6>
                                 <div class="d-flex flex-column gap-2">
                                     <div class="d-flex align-items-center">
                                         <div class="seat-legend available economy me-2"></div>

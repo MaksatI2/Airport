@@ -121,40 +121,6 @@
                             </form>
                         </div>
                     </div>
-
-                    <div class="card mt-4 border-0 bg-light">
-                        <div class="card-body p-4">
-                            <h6 class="card-title text-primary mb-3">
-                                <i class="fas fa-info-circle me-2"></i>Информация о создании
-                            </h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
-                                            <small>Пароль будет автоматически зашифрован</small>
-                                        </li>
-                                        <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
-                                            <small>Email должен быть уникальным</small>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
-                                            <small>Авиакомпания сможет войти сразу после создания</small>
-                                        </li>
-                                        <li class="mb-2">
-                                            <i class="fas fa-check text-success me-2"></i>
-                                            <small>Статус можно изменить позже</small>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

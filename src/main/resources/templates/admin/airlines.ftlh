@@ -27,7 +27,18 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <#if airlines??>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="page-size-selector">
+                                <select class="form-select form-select-sm" onchange="location = '?page=1&size=' + this.value;">
+                                    <option value="5" <#if pageSize == 5>selected</#if>>5 на странице</option>
+                                    <option value="10" <#if pageSize == 10>selected</#if>>10 на странице</option>
+                                    <option value="20" <#if pageSize == 20>selected</#if>>20 на странице</option>
+                                    <option value="50" <#if pageSize == 50>selected</#if>>50 на странице</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <#if airlines?? && airlines?size gt 0>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead class="table-dark">
@@ -63,16 +74,16 @@
                                             <td>
                                                 <#if airline.enabled>
                                                     <span class="badge bg-success">
-                                                            <i class="fas fa-check me-1"></i>Активна
-                                                        </span>
+                                                        <i class="fas fa-check me-1"></i>Активна
+                                                    </span>
                                                 <#else>
                                                     <span class="badge bg-danger">
-                                                            <i class="fas fa-times me-1"></i>Заблокирована
-                                                        </span>
+                                                        <i class="fas fa-times me-1"></i>Заблокирована
+                                                    </span>
                                                 </#if>
                                             </td>
                                             <td>
-                                                <a href="/admin/airline/${airline.id}"
+                                                <a href="/flights/airline/${airline.id}?page=1&size=10"
                                                    class="btn btn-sm btn-outline-primary"
                                                    title="Просмотреть рейсы авиакомпании">
                                                     <i class="fas fa-plane me-1"></i>Рейсы
@@ -93,6 +104,41 @@
                                     </#list>
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="text-muted">
+                                    Показано ${(currentPage - 1) * pageSize + 1}-${((currentPage - 1) * pageSize + airlines?size)} из ${totalItems} авиакомпаний
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <#if currentPage lte 1>
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Предыдущая</span>
+                                            </li>
+                                        <#else>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=${currentPage - 1}&size=${pageSize}">Предыдущая</a>
+                                            </li>
+                                        </#if>
+
+                                        <#list 1..totalPages as i>
+                                            <li class="page-item ${(i == currentPage)?then('active','')}">
+                                                <a class="page-link" href="?page=${i}&size=${pageSize}">${i}</a>
+                                            </li>
+                                        </#list>
+
+                                        <#if currentPage gte totalPages>
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Следующая</span>
+                                            </li>
+                                        <#else>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=${currentPage + 1}&size=${pageSize}">Следующая</a>
+                                            </li>
+                                        </#if>
+                                    </ul>
+                                </nav>
                             </div>
                         <#else>
                             <div class="text-center py-5">

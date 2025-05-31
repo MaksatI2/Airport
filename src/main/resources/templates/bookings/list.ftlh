@@ -7,9 +7,6 @@
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="fas fa-ticket-alt me-2"></i>Мои бронирования</h2>
-                    <a href="/flights" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Новое бронирование
-                    </a>
                 </div>
                   <#if bookings?? && bookings?size gt 0>
                     <div class="row">

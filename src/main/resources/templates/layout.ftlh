@@ -10,6 +10,22 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
         <style>
+            html, body {
+                height: 100%;
+            }
+            body {
+                display: flex;
+                flex-direction: column;
+            }
+            main {
+                flex: 1 0 auto;
+                margin-top: 76px;
+            }
+            footer {
+                flex-shrink: 0;
+                background-color: #2c3e50;
+                color: white;
+            }
             .navbar-brand {
                 font-weight: bold;
                 font-size: 1.5rem;
@@ -38,10 +54,6 @@
             }
             .btn-primary:hover {
                 background: linear-gradient(45deg, #5a6fd8, #6b4190);
-            }
-            footer {
-                background-color: #2c3e50;
-                color: white;
             }
             .profile-avatar {
                 width: 40px;
@@ -74,9 +86,6 @@
                                     <i class="fas fa-cog me-2"></i>Управление
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/admin/flights">
-                                            <i class="fas fa-plane me-2"></i>Управление рейсами
-                                        </a></li>
                                     <li><a class="dropdown-item" href="/admin/airlines">
                                             <i class="fas fa-building me-2"></i>Управление авиакомпаниями
                                         </a></li>
@@ -84,9 +93,6 @@
                             </li>
                         <#elseif Session.SPRING_SECURITY_CONTEXT.authentication.authorities?seq_contains('AIRLINE')>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-plane-departure me-2"></i>Управление рейсами
-                                </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="/airline/flights">
                                             <i class="fas fa-list me-2"></i>Мои рейсы
@@ -97,14 +103,8 @@
                                 </ul>
                             </li>
                         <#else>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/flights">Рейсы</a>
-                            </li>
                         </#if>
                     <#else>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/flights">Рейсы</a>
-                        </li>
                     </#if>
                     <#if Session.SPRING_SECURITY_CONTEXT??>
                         <#if Session.SPRING_SECURITY_CONTEXT.authentication.authorities?seq_contains('USER')>
@@ -143,11 +143,11 @@
         </div>
     </nav>
 
-    <main style="margin-top: 76px;">
+    <main>
         <#nested>
     </main>
 
-    <footer class="py-5 mt-5">
+    <footer class="py-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">

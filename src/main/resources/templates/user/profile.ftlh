@@ -13,6 +13,20 @@
         </div>
     </#if>
 
+    <#if successMessage??>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ${successMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </#if>
+
+    <#if errorMessage??>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            ${errorMessage}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </#if>
+
     <#if error??>
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
@@ -70,14 +84,11 @@
                             </div>
                             <div class="card-body">
                                 <#if user.accountType == 'ADMIN'>
-                                    <a href="/admin/flights" class="btn btn-outline-primary w-100 mb-2">
-                                        <i class="fas fa-plane me-2"></i>Управление рейсами
-                                    </a>
                                     <a href="/admin/airlines" class="btn btn-outline-primary w-100">
                                         <i class="fas fa-building me-2"></i>Управление авиакомпаниями
                                     </a>
                                 <#elseif user.accountType == 'AIRLINE'>
-                                    <a href="/airline/flights" class="btn btn-outline-primary w-100 mb-2">
+                                    <a href="/flights/airline/${user.id}" class="btn btn-outline-primary w-100 mb-2">
                                         <i class="fas fa-list me-2"></i>Мои рейсы
                                     </a>
                                     <a href="/airline/flights/create" class="btn btn-outline-primary w-100">
@@ -117,9 +128,6 @@
                                     <i class="fas fa-plane fa-3x text-primary mb-3"></i>
                                     <h5>Добро пожаловать, ${user.username}!</h5>
                                     <p>Используйте панель управления для работы с рейсами вашей авиакомпании</p>
-                                    <a href="/airline/flights" class="btn btn-primary">
-                                        <i class="fas fa-list me-2"></i>Просмотреть рейсы
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -197,9 +205,6 @@
                                         <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
                                         <h5>У вас нет бронирований</h5>
                                         <p>Начните поиск рейсов, чтобы создать первое бронирование</p>
-                                        <a href="/flights" class="btn btn-primary">
-                                            <i class="fas fa-search me-2"></i>Найти рейсы
-                                        </a>
                                     </div>
                                 </#if>
                             </div>
