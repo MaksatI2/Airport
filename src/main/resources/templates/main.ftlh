@@ -261,6 +261,36 @@
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             border: none;
+            width: 320px;
+            overflow: hidden;
+        }
+
+        .flatpickr-months {
+            padding: 5px;
+        }
+
+        .flatpickr-month {
+            height: 40px;
+        }
+
+        .flatpickr-weekdays {
+            height: 30px;
+        }
+
+        .flatpickr-days {
+            width: 100%;
+        }
+
+        .dayContainer {
+            min-width: 100%;
+            width: 100%;
+            padding: 5px;
+        }
+
+        .flatpickr-day {
+            height: 30px;
+            line-height: 30px;
+            margin: 2px;
         }
 
         .flatpickr-current-month .flatpickr-monthDropdown-months {
@@ -288,11 +318,14 @@
         .flatpickr-day:hover {
             background: rgba(42, 82, 152, 0.2);
         }
+
+        body {
+            overflow-x: hidden;
+        }
     </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация календаря с выбором диапазона дат
             const dateRangeInput = document.getElementById('dateRange');
             const startDateInput = document.getElementById('startDate');
             const endDateInput = document.getElementById('endDate');
@@ -302,12 +335,11 @@
                 locale: "ru",
                 dateFormat: "d.m.Y",
                 minDate: "today",
-                showMonths: 2,
+                showMonths: 1,
                 static: true,
                 monthSelectorType: "static",
                 onChange: function(selectedDates, dateStr, instance) {
                     if (selectedDates.length === 2) {
-                        // Форматируем даты для отправки на сервер (YYYY-MM-DD)
                         const startDate = selectedDates[0];
                         const endDate = selectedDates[1];
 
@@ -319,21 +351,18 @@
                             String(endDate.getMonth() + 1).padStart(2, '0') + '-' +
                             String(endDate.getDate()).padStart(2, '0');
                     } else if (selectedDates.length === 1) {
-                        // Если выбрана только одна дата, используем её как начальную
                         const startDate = selectedDates[0];
                         startDateInput.value = startDate.getFullYear() + '-' +
                             String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
                             String(startDate.getDate()).padStart(2, '0');
                         endDateInput.value = '';
                     } else {
-                        // Очищаем скрытые поля если даты не выбраны
                         startDateInput.value = '';
                         endDateInput.value = '';
                     }
                 }
             });
 
-            // Автокомплит для поля "Откуда"
             const fromInput = document.getElementById('fromInput');
             const fromResults = document.getElementById('fromResults');
             const fromIdInput = document.getElementById('fromId');
@@ -372,7 +401,6 @@
                     });
             });
 
-            // Автокомплит для поля "Куда"
             const toInput = document.getElementById('toInput');
             const toResults = document.getElementById('toResults');
             const toIdInput = document.getElementById('toId');
@@ -411,7 +439,6 @@
                     });
             });
 
-            // Скрываем автокомплит при клике вне элементов
             document.addEventListener('click', function(e) {
                 if (e.target !== fromInput && !fromResults.contains(e.target)) {
                     fromResults.style.display = 'none';
