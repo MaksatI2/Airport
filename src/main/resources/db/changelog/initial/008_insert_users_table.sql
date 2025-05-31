@@ -11,6 +11,11 @@ SELECT 'Maksat',
        'zer0icemax@gmail.com',
        (SELECT id FROM authorities WHERE name = 'USER')
 UNION ALL
+SELECT 'ADIS',
+       '$2a$12$B5Rvf3QpG5Vlv4se8.NDQuIe.sxoG.UVWV8eQRpbwMK980dX/V1ZK',
+       'adis@gmail.com',
+       (SELECT id FROM authorities WHERE name = 'USER')
+UNION ALL
 -- пароль admin
 SELECT 'Admin',
        '$2a$12$EQ3Sj7pKeCRY9tGtgW54k.kr2Lm.o2E9XVl4tgNiTBYWCUPwXfxpO',

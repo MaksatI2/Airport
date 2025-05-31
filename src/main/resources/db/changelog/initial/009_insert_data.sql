@@ -38,6 +38,8 @@ FROM (
              ('Boeing 747-400', 416, 42, 'SingaporeAirlines'),
              ('Airbus A330-200', 246, 24, 'TurkishAirlines'),
              ('Boeing 717', 134, 8, 'Lufthansa'),
+             ('Boeing 737-100', 120, 10, 'Emirates'),
+             ('Airbus A220', 150, 12, 'QatarAirways'),
              ('Bombardier Q400', 78, 0, 'Emirates')
          ) AS model_data(model, capacity, business_capacity, airline_name);
 
