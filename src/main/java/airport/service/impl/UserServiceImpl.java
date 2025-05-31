@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
                     return new UserNotFoundException("Пользователь с ID не найден: " + userId);
                 });
 
-        if (!user.getEnabled()) {
+        if (user.getEnabled()) {
             Page<Flight> airlineFlights = flightRepository.findFlightsByAirlineId(userId, Pageable.unpaged());
             for (Flight flight : airlineFlights) {
                 List<Booking> bookings = bookingRepository.findByFlightId(flight.getId());
