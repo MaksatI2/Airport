@@ -1,0 +1,87 @@
+package airport.controller;
+
+import airport.dto.FlightDTO;
+import airport.dto.UserDTO;
+import airport.model.AccountType;
+import airport.service.FlightService;
+import airport.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin")
+@RequiredArgsConstructor
+public class AdminController {
+
+    private final UserService userService;
+    private final FlightService flightService;
+
+    @GetMapping("/airline/{id}")
+    public String showAirlineFlights(@PathVariable Long id, Model model) {
+        model.addAttribute("flights", flightService.getFlightsByAirlineId(id));
+        model.addAttribute("title", "Рейсы авиакомпании");
+        return "airlines/flights";
+    }
+
+    @GetMapping("/airlines")
+    public String showAirlines(Model model) {
+        List<UserDTO> airlines = userService.getAllUsersByAccountType(AccountType.AIRLINE);
+
+        for (UserDTO airline : airlines) {
+            List<FlightDTO> flights = flightService.getFlightsByAirlineId(airline.getId());
+            airline.setFlightCount(flights.size());
+        }
+
+        model.addAttribute("airlines", airlines);
+        return "admin/airlines";
+    }
+
+    @GetMapping("/airlines/create")
+    public String showCreateAirlineForm(Model model) {
+        UserDTO airline = new UserDTO();
+        airline.setAccountType(AccountType.AIRLINE);
+        model.addAttribute("airline", airline);
+        return "admin/create-airline";
+    }
+
+    @PostMapping("/airlines/create")
+    public String createAirline(@Valid @ModelAttribute("airline") UserDTO airlineDTO,
+                                BindingResult result,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            return "admin/create-airline";
+        }
+
+        try {
+            airlineDTO.setAccountType(AccountType.AIRLINE);
+            airlineDTO.setEnabled(true);
+
+            userService.registerUser(airlineDTO);
+            redirectAttributes.addFlashAttribute("successMessage", "Авиакомпания успешно создана!");
+            return "redirect:/admin/airlines";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Ошибка при создании авиакомпании: " + e.getMessage());
+            return "admin/create-airline";
+        }
+    }
+
+    @GetMapping("/airlines/{id}/toggle-status")
+    public String toggleAirlineStatus(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.toggleUserStatus(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Статус авиакомпании изменен!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ошибка при изменении статуса: " + e.getMessage());
+        }
+        return "redirect:/admin/airlines";
+    }
+}
