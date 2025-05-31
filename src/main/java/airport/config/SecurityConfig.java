@@ -42,6 +42,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/airline/**").hasAuthority("AIRLINE")
                         .requestMatchers("/bookings/**").hasAuthority("USER")
+                        .requestMatchers("/flights/airline/**").hasAnyAuthority("ADMIN", "AIRLINE")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )

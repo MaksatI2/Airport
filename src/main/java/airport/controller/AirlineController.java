@@ -56,7 +56,7 @@ public class AirlineController {
         try {
             flightService.createFlight(flightDTO);
             redirectAttributes.addFlashAttribute("successMessage", "Рейс успешно создан!");
-            return "redirect:/airline/flights";
+            return "redirect:/profile";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("destinations", destinationService.getAllAirports());

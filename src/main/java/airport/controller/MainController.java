@@ -1,7 +1,6 @@
 package airport.controller;
 
 import airport.service.DestinationService;
-import airport.service.FlightService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
