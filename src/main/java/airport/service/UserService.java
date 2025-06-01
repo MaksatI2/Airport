@@ -18,4 +18,6 @@ public interface UserService {
     ResponseEntity<?> getAvatarByUserId(Long userId);
     Page<UserDTO> getAllUsersByAccountType(AccountType accountType, Pageable pageable);
     void toggleUserStatus(Long userId);
+
+    boolean isAdmin(String username);
 }

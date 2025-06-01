@@ -171,4 +171,11 @@ public class UserServiceImpl implements UserService {
 
         log.info("Статус пользователя ID {} изменен на: {}", userId, user.getEnabled());
     }
+
+    @Override
+    public boolean isAdmin(String username) {
+        return userRepository.findByUsername(username)
+                .map(user -> user.getAccountType() == AccountType.ADMIN)
+                .orElse(false);
+    }
 }
