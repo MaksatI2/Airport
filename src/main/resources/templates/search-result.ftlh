@@ -63,9 +63,11 @@
                                                 </td>
                                                 <td class="fw-bold text-primary">${flight.price} $</td>
                                                 <td class="text-end">
-                                                    <a href="/bookings/flight/${flight.id}/seats" class="btn btn-sm btn-primary">
-                                                        Выбрать <i class="fas fa-chevron-right ms-1"></i>
-                                                    </a>
+                                                    <#if !Session.SPRING_SECURITY_CONTEXT?? || (Session.SPRING_SECURITY_CONTEXT.authentication.authorities?seq_contains('USER'))>
+                                                        <a href="/bookings/flight/${flight.id}/seats" class="btn btn-sm btn-primary">
+                                                            Выбрать <i class="fas fa-chevron-right ms-1"></i>
+                                                        </a>
+                                                    </#if>
                                                 </td>
                                             </tr>
                                         </#list>
