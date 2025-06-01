@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    int countByUserEmail(String email);
-
     List<Booking> findByUserIdOrderByBookingTimeDesc(Long userId);
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.flight.id = :flightId AND b.user IS NOT NULL")

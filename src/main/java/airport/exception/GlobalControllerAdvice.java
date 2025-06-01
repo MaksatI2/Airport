@@ -22,7 +22,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     public ModelAndView handleAccessDenied(AccessDeniedException e, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView("redirect:/profile");
-        redirectAttributes.addFlashAttribute("errorMessage", "Доступ запрещен. У вас недостаточно прав для выполнения данного действия.");
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return mav;
     }
 
