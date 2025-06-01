@@ -4,7 +4,6 @@ import airport.dto.CreateFlightDTO;
 import airport.service.AirplaneService;
 import airport.service.DestinationService;
 import airport.service.FlightService;
-import airport.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ public class AirlineController {
     private final FlightService flightService;
     private final DestinationService destinationService;
     private final AirplaneService airplaneService;
-    private final UserService userService;
 
 
     @GetMapping("/flights/create")
@@ -32,7 +30,7 @@ public class AirlineController {
         model.addAttribute("flight", new CreateFlightDTO());
         model.addAttribute("destinations", destinationService.getAllAirports());
         model.addAttribute("airplanes", airplaneService.getAvailableAirplanes());
-        return "airlines/create";
+        return "flights/create";
     }
 
     @PostMapping("/flights/create")
@@ -50,7 +48,7 @@ public class AirlineController {
         if (result.hasErrors()) {
             model.addAttribute("destinations", destinationService.getAllAirports());
             model.addAttribute("airplanes", airplaneService.getAvailableAirplanes());
-            return "airlines/create";
+            return "flights/create";
         }
 
         try {
@@ -61,12 +59,12 @@ public class AirlineController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("destinations", destinationService.getAllAirports());
             model.addAttribute("airplanes", airplaneService.getAvailableAirplanes());
-            return "airlines/create";
+            return "flights/create";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Ошибка при создании рейса: " + e.getMessage());
             model.addAttribute("destinations", destinationService.getAllAirports());
             model.addAttribute("airplanes", airplaneService.getAvailableAirplanes());
-            return "airlines/create";
+            return "flights/create";
         }
     }
 
