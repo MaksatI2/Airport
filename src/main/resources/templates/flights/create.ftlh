@@ -171,7 +171,7 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a href="/admin/flights" class="btn btn-secondary">
+                                <a href="/profile" class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>Отмена
                                 </a>
                                 <button type="submit" class="btn btn-success">
