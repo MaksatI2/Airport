@@ -6,7 +6,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center mb-4">
-                    <a href="/admin/flights" class="btn btn-outline-secondary me-3">
+                    <a href="/profile" class="btn btn-outline-secondary me-3">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h1>
